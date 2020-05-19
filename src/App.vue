@@ -59,7 +59,7 @@ export default {
     transition: all 0.35s ease;//动画
     will-change: transform;
     overflow-y: auto; //auto 如果溢出框，则应该提供滚动机制。
-    background: #8a8686;
+    //background: #8a8686;
   }
   .footer-mTabbar {
     position: absolute;
