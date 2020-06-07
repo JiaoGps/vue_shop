@@ -46,10 +46,33 @@
         </div>
 
         <!-- 广告 -->
-        <div class="banner"></div>
+        <div class="banner">
+          <img src="@/assets/img/banner.jpg" />
+        </div>
 
         <!-- 活动区域 -->
-        <div class="promotion"></div>
+        <div class="promotion">
+          <div class="text">优惠专区</div>
+          <div class="list">
+            <div class="column" v-for="(row,index) in Promotion" :key="index">
+              <div class="top">
+                <div class="title">{{row.title}}</div>
+                <div class="countdown" v-if="row.countdown">
+                  <div>{{row.countdown.h}}</div>:
+                  <div>{{row.countdown.m}}</div>:
+                  <div>{{row.countdown.s}}</div>
+                </div>
+              </div>
+              <div class="left">
+                <div class="ad">{{row.ad}}</div>
+                <div class="info">点击进入</div>
+              </div>
+              <div class="right">
+                <img :src="row.img" />
+              </div>
+            </div>
+          </div>
+        </div>
 
         <!-- 商品列表 -->
         <div class="goods-list"></div>
@@ -81,8 +104,13 @@ export default {
         { id: 7, name: "书籍", img: require("@/assets/img/category/7.png") },
         { id: 8, name: "文具", img: require("@/assets/img/category/8.png") }
       ],
-      isLoading: false
+      isLoading: false,
+      // 活动专区
+      Promotion: []
     };
+  },
+  createdL() {
+    this.Timer();
   },
   methods: {
     onRefresh() {
@@ -90,6 +118,51 @@ export default {
     },
     onChange(index) {
       this.current = index;
+    },
+    toCategory(row) {
+      console.log(row);
+    },
+    Timer() {
+      setInterval(() => {
+        if (this.Promotion.length > 0) {
+          for (let i = 0; i < this.Promotion.length; i++) {
+            let row = this.Promotion[i];
+            if (row.countdown) {
+              if (
+                !(
+                  row.countdown.h == 0 &&
+                  row.countdown.m == 0 &&
+                  row.countdown.s == 0
+                )
+              ) {
+                if (row.countdown.s > 0) {
+                  row.countdown.s--;
+                  row.countdown.s =
+                    row.countdown.s < 10
+                      ? "0" + row.countdown.s
+                      : row.countdown.s;
+                } else if (row.countdown.m > 0) {
+                  row.countdown.m--;
+                  row.countdown.m =
+                    row.countdown.m < 10
+                      ? "0" + row.countdown.m
+                      : row.countdown.m;
+                  row.countdown.s = 59;
+                } else if (row.countdown.h > 0) {
+                  row.countdown.h--;
+                  row.countdown.h =
+                    row.countdown.h < 10
+                      ? "0" + row.countdown.h
+                      : row.countdown.h;
+                  row.countdown.s = 59;
+                  row.countdown.m = 59;
+                }
+                this.Promotion[i].countdown = row.countdown;
+              }
+            }
+          }
+        }
+      }, 1000);
     }
   }
 };
@@ -171,12 +244,63 @@ export default {
     }
   }
 
-  .category-list{
+  .category-list {
     position: relative;
-    
+    width: 92%;
+    margin: 0 4%;
+    padding: 0 0 30px 0;
+    border-bottom: solid 2px #f6f6f6;
+    display: flex;
+    justify-content: space-between; //向两边对齐
+    flex-wrap: wrap; //可以换行
+    .category {
+      width: 25%;
+      margin-top: 50px;
+      display: flex; //浮动
+      flex-wrap: wrap; //可以换行
+      .img {
+        width: 100%;
+        display: flex;
+        justify-content: center; //居中
+        img {
+          width: 9vw;
+          height: 9vw;
+        }
+      }
+      .text {
+        margin-top: 16px;
+        width: 100%;
+        display: flex;
+        justify-content: center; //居中
+        font-size: 24px;
+        color: #3c3c3c;
+      }
+    }
   }
 
+  .banner {
+    width: 92%;
+    margin: 40px 4%;
+    img {
+      width: 100%;
+      height: 20vw;
+      border-radius: 10vw;
+      box-shadow: 0px 5px 25px rgba(0, 0, 0, 0.3);
+    }
+  }
 
-
+  .promotion {
+    width: 92%;
+    margin: 0 4%;
+    .text {
+      width: 100%;
+      height: 60px;
+      font-size: 34px;
+      font-weight: 600;
+      margin-top: -10px;
+    }
+    .left {
+    }
+  }
 }
 </style>
